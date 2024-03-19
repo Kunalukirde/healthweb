@@ -31,5 +31,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'healthy/index.html'));
 });
 
-const PORT = process.env.PORT;
-app.listen(PORT, ()=> {console.log(`Listeing on http://localhost:${PORT}`)});
+// const PORT = process.env.PORT;
+// app.listen(PORT, ()=> {console.log(`Listeing on http://localhost:${PORT}`)});
+
+app.listen(()=> { console.log('Server Started')});
