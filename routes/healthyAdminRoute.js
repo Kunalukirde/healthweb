@@ -32,9 +32,10 @@ router.post('/addhealthcodition',async (req,res)=> {
 
 router.post('/addhealthname',async (req,res)=> {
     try {
-        const {healthname} =req.body;
+        const {healthname, health_name_description} =req.body;
         const doc = await AddHealthNameTable({
-            healthname:healthname
+            healthname:healthname,
+            health_name_description:health_name_description
         })
         await doc.save();
         const savedHealthName = await AddHealthNameTable.find();
@@ -47,9 +48,10 @@ router.post('/addhealthname',async (req,res)=> {
 
 router.post('/addhealthtype',async (req,res)=> {
     try {
-        const {healthtype} =req.body;
+        const {healthtype, health_type_description} =req.body;
         const doc = await HealthTypeTable({
-            healthtype:healthtype
+            healthtype:healthtype,
+            health_type_description:health_type_description
         })
         await doc.save();
         const savedHealthType = await HealthTypeTable.find();
@@ -97,7 +99,7 @@ const storage = multer.memoryStorage();
 const upload = multer({storage : storage})
 // ADD HEALTH DATA
 router.post('/addHealth',upload.single('image'), async(req,res) => {
-    const { health_type,health_condition,healthCondition_description,health_name,title,reviewed_by,content} = req.body;
+    const { health_type,health_type_description,health_condition,healthCondition_description,health_name,health_name_description,title,reviewed_by,content} = req.body;
     console.log('body data', req.body);
     try {
         let image;
@@ -136,9 +138,11 @@ router.post('/addHealth',upload.single('image'), async(req,res) => {
   
         const wellnessData = new AddHealthTable({
             health_type:health_type,
+            health_type_description:health_type_description,
             health_condition:health_condition,
             healthCondition_description:healthCondition_description,
             health_name:health_name,
+            health_name_description:health_name_description,
             title: title,
             image:image,
             reviewed_by: reviewed_by,

@@ -18,12 +18,14 @@ const AdminRoute = require('./routes/AdminRoute.js');
 const Wellness = require('./routes/wellnessData.js');
 const healthyAdminRoute = require('./routes/healthyAdminRoute.js');
 const healthyRoute = require('./routes/healthy.js');
+const newsRoute = require('./routes/newsRoute.js');
 
 
 app.use('/admin', AdminRoute);
 app.use('/wellness' , Wellness);
 app.use('/healthyAdmin',healthyAdminRoute);
-app.use('/healthy',healthyRoute)
+app.use('/healthy',healthyRoute);
+app.use('/news', newsRoute);
 
 app.use(express.static(path.join(__dirname, 'healthy')));
 // Catch all other routes and return the Angular index file
