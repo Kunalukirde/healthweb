@@ -27,7 +27,7 @@ app.use('/wellness' , Wellness);
 app.use('/healthyAdmin',healthyAdminRoute);
 app.use('/healthy',healthyRoute);
 app.use('/news', newsRoute);
-app.use('/feedback',feedBackRoute);
+app.use('/healthy/feedback',feedBackRoute);
 
 app.use(express.static(path.join(__dirname, 'healthy')));
 app.use('/adminpanel',express.static(path.join(__dirname,'admin/browser')));
