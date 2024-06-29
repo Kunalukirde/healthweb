@@ -13,7 +13,8 @@ router.get('/',async(req,res) => {
 
 router.get('/healthyData',async(req,res)=> {
     try {
-        const healthyData = await healthyDataTable.find();
+        const All_healthy_data = await healthyDataTable.find();
+        const healthyData = All_healthy_data.reverse();
         res.status(200).send({status: true, message : 'fetch success', healthyData});
     } catch (error) {
         res.status(500).send({status:false, message : 'internal server error'});

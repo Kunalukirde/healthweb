@@ -10,7 +10,7 @@ const multer = require('multer');
 const { ObjectId } = require('mongodb');
 
 router.get('/',async (req,res) => {
-    res.status(200).send({message:'Healthy server is running'});
+    res.status(200).send({message:'HealthGenious server is running'});
 });
 
 router.post('/addhealthcodition',async (req,res)=> {
