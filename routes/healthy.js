@@ -5,7 +5,7 @@ const healthyDataTable = require('../models/AddHealth.js');
 
 router.get('/',async(req,res) => {
     try {
-        res.status(200).send({message: 'Healthy Website is live'})
+        res.status(200).send({message: 'HealthGenious Website is live'})
     } catch (error) {
         res.status(500).send({message : "Internal Server Error"});
     }
