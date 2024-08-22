@@ -6,6 +6,11 @@ const healthConditionTable = require('../models/healthmain/healthCondition.js');
 const healthNameTable = require('../models/healthmain/healthName.js');
 const HealthTypeTable = require('../models/healthmain/healthType.js');
 const AddHealthTable = require('../models/AddHealth.js');
+const NewsTable = require('../models/NewsModel.js');
+const add_News_Table = require('../models/NewsModel.js');
+const searchdConditionsTable = require('../models/searchedConditions.js');
+const User_Feedback_Table = require('../models/feedback.js');
+
 const multer = require('multer');
 const { ObjectId } = require('mongodb');
 
@@ -100,7 +105,7 @@ const upload = multer({storage : storage})
 // ADD HEALTH DATA
 router.post('/addHealth',upload.single('image'), async(req,res) => {
     const { health_type,health_type_description,health_condition,healthCondition_description,health_name,health_name_description,title,reviewed_by,content} = req.body;
-    console.log('body data', req.body);
+    // console.log('body data', req.body);
     try {
         let image;
   
@@ -136,7 +141,7 @@ router.post('/addHealth',upload.single('image'), async(req,res) => {
             }];
         }
   
-        const wellnessData = new AddHealthTable({
+        const health_data = new AddHealthTable({
             health_type:health_type,
             health_type_description:health_type_description,
             health_condition:health_condition,
@@ -149,10 +154,10 @@ router.post('/addHealth',upload.single('image'), async(req,res) => {
             content: mappedContent
         });
   
-        await wellnessData.save();
+        await health_data.save();
         const savedHealthData = await AddHealthTable.find({ title: title });
         // console.log('savedHealthData', savedHealthData);
-        res.status(200).json({ status: true, message: 'Data saved successfully', savedHealthData });
+        res.status(200).send({ status: true, message: 'Data saved successfully', savedHealthData });
     } catch (error) {
         console.error(error);
         res.status(500).send({ message: 'Internal Server Error' });
@@ -179,13 +184,97 @@ router.get('/getHealth',async(req,res) => {
       }
       const objectId = new ObjectId(_id);
       const deletedDoc = await AddHealthTable.findOneAndDelete({ _id: objectId });
-        res.status(200).send({ message: 'Deleted successfully', deletedDoc: deletedDoc.value });
+        res.status(200).send({ message: 'Deleted successfully', deletedDoc: deletedDoc });
     } catch (error) {
       console.error(error);
       res.status(500).send({ message: 'Internal Server Error' });
     }
   });
 
+
+
+//   news
+
+router.post('/addnews',async (req,res) => {  
+    try {
+        const {sourceName, author, title, description, url, urlToImage, publishedAt, content}  = req.body;
+        console.log('body_Data',req.body);
+        let mappedContent = [];
+        // if content is array, map it over
+        if(Array.isArray(content)){
+        mappedContent = content.map(c => ({
+            news_topic_heading: c.news_topic_heading,
+            news_topic_title : c.news_topic_title,
+            news_topic_description: c.news_topic_description
+        }))
+    } else { 
+        // if content is not an array, handle it accordingly (e.g., convert it to an array)
+        mappedContent =[{
+            news_topic_heading : content.news_topic_heading,
+            news_topic_title : content.news_topic_title,
+            news_topic_description : content.news_topic_description
+        }]
+    }
+      
+        const news_Data = new add_News_Table({
+            sourceName:sourceName,
+            author:author,
+            title: title,
+            description: description,
+            url: url,
+            urlToImage: urlToImage,
+            publishedAt: publishedAt,
+            content: mappedContent,
+        })
+        await news_Data.save();
+        res.status(200).send({message: 'success'});
+    } catch (error) {
+        res.status(409).send('Internal Server Error',error);
+    }
+} );
+
+
+router.delete('/DeleteNews',async(req,res) => {
+    try {
+        const {_id} = req.body;
+        const DeleteNews = await NewsTable.deleteOne({_id : _id});
+        res.status(200).send({message:'deleted successfully',DeleteNews})
+    } catch (error) {
+        res.status(409).send({message:'Internal Server Error'})
+    }
+})
+
+
+router.get('/fetchAllNews',async (req,res) => {
+    try {
+        const All_News = await NewsTable.find();
+        const News = All_News.reverse();
+        res.status(200).send({message:'fetch success', status:true, News})
+    } catch (error) {
+        res.status(409).send({message:'Internal Server Error'});
+    }
+})
+
+router.get('/fetchSearchedConditions', async (req ,res) => {
+    try {
+        const Searched_Conditions = (await searchdConditionsTable.find()).reverse();
+        res.status(200).send({ 
+            message: 'Fetched Success', 
+            data: Searched_Conditions 
+        });
+    } catch (error) {
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+})
+
+router.get('/fetchUserFeedback',async (req,res) => {
+    try {
+        const User_Feedback = (await User_Feedback_Table.find()).reverse();
+        res.status(200).send({message :'fetch success',data:User_Feedback});
+    } catch (error) {
+        res.status(500).send({message : 'Internal Server Error'});
+    }
+})
 
 
 

@@ -13,21 +13,23 @@ app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 
 
-const routes = require('./routes/routes.js');
-const AdminRoute = require('./routes/AdminRoute.js');
-const Wellness = require('./routes/wellnessData.js');
-const healthyAdminRoute = require('./routes/healthyAdminRoute.js');
 const healthyRoute = require('./routes/healthy.js');
 const newsRoute = require('./routes/newsRoute.js');
 const feedBackRoute = require('./routes/feedbackRoute.js');
+const Wellness = require('./routes/wellnessData.js');
+const routes = require('./routes/routes.js');
+const adminAuth = require('./routes/AdminAuth.js');
+const AdminRoute = require('./routes/AdminRoute.js');
+const healthyAdminRoute = require('./routes/healthyAdminRoute.js');
+const auth = require('./middleware/AdminAuth.js');
 
-
-app.use('/admin', AdminRoute);
-app.use('/wellness' , Wellness);
-app.use('/healthyAdmin',healthyAdminRoute);
 app.use('/healthy',healthyRoute);
-app.use('/news', newsRoute);
 app.use('/healthy/feedback',feedBackRoute);
+app.use('/wellness' , Wellness);
+app.use('/adminAuth', adminAuth);
+app.use('/admin', AdminRoute);
+app.use('/news', newsRoute);
+app.use('/healthyAdmin',auth,healthyAdminRoute);
 
 app.use(express.static(path.join(__dirname, 'healthy')));
 app.use('/adminpanel',express.static(path.join(__dirname,'admin/browser')));
