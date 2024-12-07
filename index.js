@@ -8,28 +8,29 @@ dotenv.config();
 
 const mongoDBconnect = require('./dbconnect/dbconnection.js');
 const DATABASE_URL = process.env.DATABASE_URL;
-mongoDBconnect(DATABASE_URL);
+const DB_Name = process.env.db_Name;
+mongoDBconnect(DATABASE_URL,DB_Name);
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 
 
-const healthyRoute = require('./routes/healthy.js');
+const healthgeniousRoute = require('./routes/healthgenious.js');
 const newsRoute = require('./routes/newsRoute.js');
 const feedBackRoute = require('./routes/feedbackRoute.js');
 const Wellness = require('./routes/wellnessData.js');
 const routes = require('./routes/routes.js');
-const adminAuth = require('./routes/AdminAuth.js');
+const healthgeniousadminAuth = require('./routes/AdminAuth.js');
 const AdminRoute = require('./routes/AdminRoute.js');
-const healthyAdminRoute = require('./routes/healthyAdminRoute.js');
+const healthgenious_AdminRoute = require('./routes/healthgeniousAdminRoute.js');
 const auth = require('./middleware/AdminAuth.js');
 
-app.use('/healthy',healthyRoute);
-app.use('/healthy/feedback',feedBackRoute);
+app.use('/healthgenious',healthgeniousRoute);
+app.use('/healthgenious/feedback',feedBackRoute);
 app.use('/wellness' , Wellness);
-app.use('/adminAuth', adminAuth);
+app.use('/healthgeniousadminAuth', healthgeniousadminAuth);
 app.use('/admin', AdminRoute);
 app.use('/news', newsRoute);
-app.use('/healthyAdmin',auth,healthyAdminRoute);
+app.use('/healthgeniousAdmin',auth,healthgenious_AdminRoute);
 
 app.use(express.static(path.join(__dirname, 'healthy')));
 app.use('/adminpanel',express.static(path.join(__dirname,'admin/browser')));

@@ -27,7 +27,7 @@ Router.post('/login', async (req,res) => {
     try {
         const admin_user = await Admin_User.findOne({email});
         if(!admin_user) {
-            return res.status(400).send({message:'Invalid Credentials'});
+            return res.status(400).send({message:'Invalid Credentials or Not registered user'});
         }
         const isMatch = await admin_user.comparePassword(password);
         if(!isMatch) {
