@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const PORT = process.env.PORT || 80;
 const cors = require('cors');
 app.use(cors());
 const path = require('path');
@@ -32,14 +33,37 @@ app.use('/healthgeniousadminAuth', healthgeniousadminAuth);
 app.use('/admin', AdminRoute);
 app.use('/news', newsRoute);
 app.use('/healthgeniousAdmin',auth,healthgenious_AdminRoute);
-
-app.use(express.static(path.join(__dirname, 'healthy')));
 app.use('/adminpanel',express.static(path.join(__dirname,'admin/browser')));
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'healthy/index.html'));
-});
-app.get('/adminpanel/*',(req,res) => {
-    res.sendFile(path.join(__dirname, 'admin/browser/index.html'));
-})
-const PORT = process.env.PORT;
-app.listen(PORT, ()=> {console.log(`Listeing on http://localhost:${PORT}`)});
+
+    // FOR MAINTENANCE CODE
+    const isMaintenance = process.env.MAINTENANCE === 'true';
+    if (isMaintenance) {
+        console.log("Maintenance mode is ON.");
+        app.use(express.static(path.join(__dirname, 'public')));
+        app.get('*', (req, res) => {
+            res.sendFile(path.join(__dirname, 'public', 'maintenance.html'));
+        });
+    } else {
+        console.log("Maintenance mode is OFF.");
+        app.use(express.static(path.join(__dirname, 'healthy')));
+        app.get('*', (req, res) => {
+            res.sendFile(path.join(__dirname, 'healthy', 'index.html'));
+        });
+    }
+        app.get('/adminpanel/*', (req, res) => {
+            res.sendFile(path.join(__dirname, 'admin/browser/index.html'));
+        });
+
+
+// // ENTRY CODE
+// app.use(express.static(path.join(__dirname,'healthy')))
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'healthy/index.html'));
+// });
+
+// app.get('/adminpanel/*',(req,res) => {
+//     res.sendFile(path.join(__dirname, 'admin/browser/index.html'));
+// })
+
+// app.listen(PORT, ()=> {console.log(`Listeing on http://localhost:${PORT}`)});
+app.listen(PORT, () => {console.log(`Server is live on port ${PORT}`);});
