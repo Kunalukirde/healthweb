@@ -6,6 +6,8 @@ app.use(cors());
 const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config();
+console.log(process.env); // This will display all environment variables
+
 
 const mongoDBconnect = require('./dbconnect/dbconnection.js');
 
